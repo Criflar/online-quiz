@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON bodies
+// Parse json bodies
 app.use(express.json());
 
 // Create a connection to the database
@@ -31,6 +31,10 @@ app.post('/create', (req, res) => {
 
   if (!question || !choices || !answer) {
     return res.status(400).send('Question, choices, and answer are required.');
+  }
+
+  if (!choices.includes(answer)) { // Check if the answer is one of the choices
+    return res.status(400).send('The answer must be one of the choices.');
   }
 
   const sql = 'INSERT INTO questions (question, choices, answer) VALUES (?, ?, ?)';
